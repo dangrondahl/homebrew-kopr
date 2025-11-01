@@ -3,7 +3,7 @@ cask "kopr" do
   name "kopr"
   desc "CLI tool for creating GitHub PRs with Conventional Commits format"
   homepage "https://github.com/dangrondahl/kopr"
-  version "0.2.0"
+  version "0.3.0"
 
   livecheck do
     skip "Auto-generated on release."
@@ -14,29 +14,34 @@ cask "kopr" do
   on_macos do
     on_intel do
       url "https://github.com/dangrondahl/kopr/releases/download/v#{version}/kopr_#{version}_Darwin_x86_64.tar.gz"
-      sha256 "49c85ca40069d4a69f2aae4fbeda01013fd02bec8baeece97e9344a3881691ef"
+      sha256 "753f00dd3d876dac9ccce30bd47f7959a7092e3ddbb1998379c13bbd039cdba0"
     end
     on_arm do
       url "https://github.com/dangrondahl/kopr/releases/download/v#{version}/kopr_#{version}_Darwin_arm64.tar.gz"
-      sha256 "46cd4c8912e9417eb6e198fb48c6316a3453694b723e0b6ce6ce845d4fadb652"
+      sha256 "0a1af00a198482da0518a55ab13b1acc951e24259a6f611bdc93f185f8d13382"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/dangrondahl/kopr/releases/download/v#{version}/kopr_#{version}_Linux_x86_64.tar.gz"
-      sha256 "780a659f14732d578507decf43b650052b2884065642e419c5712ed06aec7010"
+      sha256 "d453786cd3cc5754100ed22aebe00c01d32e152ed55a2eee966bb329d3b59a0f"
     end
     on_arm do
       url "https://github.com/dangrondahl/kopr/releases/download/v#{version}/kopr_#{version}_Linux_arm64.tar.gz"
-      sha256 "cd8bbb6d5fdf31796a19d2177a7096f56c890192023587841f94fd9f6b7839e0"
+      sha256 "2e80ef89cce9715d3301fea7161d35ca3ba73a09e0b9c7a5deaad61805df2907"
+    end
+  end
+
+  postflight do
+    if OS.mac?
+      system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/kopr"]
     end
   end
 
   caveats do
-    "On macOS, you may need to bypass Gatekeeper security for unsigned binaries:"
-    "  xattr -d com.apple.quarantine $(which kopr)"
-    "Or allow via System Preferences > Security & Privacy > "Allow Anyway""
+    "This binary is not signed or notarized. The installer automatically removes"
+    "the quarantine attribute to allow the binary to run on macOS."
   end
 
   # No zap stanza required
